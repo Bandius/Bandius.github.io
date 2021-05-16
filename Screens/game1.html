@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Game 1</title>
+    <link rel="stylesheet" href="../v0.1.0.css">
+    <link rel="stylesheet" href="../Visual/openlab.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js" type="text/javascript"></script>
+</head>
+<body>
+    <div class="center">
+        <h1>Nájdi zvieratá podľa zvukov</h1>
+    </div>
+    <div class="center">
+        <p class="popis" id="text">V tejto hre budete počuť zvuky zvierat. <br> Vašou úlohou bude nájsť na obrazovkách okolo seba to správne zvieratko.</p>
+    </div>
+    <div id="drag" style="left: 500px; top: 700px; position: absolute;"></div>
+    <button onclick="changeScreen()">Press Me</button>
+<!-----------------------------------  openlab visualized  ------------------------------------------------------------>
+    <div class="openlab">
+        <div class="screens" style="flex-direction: row-reverse">
+            <div class="s1" id="s1">1</div>
+            <div class="s2" id="s2">2</div>
+            <div class="s3" id="s3">3</div>
+            <div class="s4" id="s4">4</div>
+            <div class="s5" id="s5">5</div>
+        </div>    
+    </div>
+    
+<!--------------------------------------------------------------------------------------------------------------------->
+    <script src="./game1.js"></script>
+    <script src="../Visual/openlab.js"></script>
+
+</body>
+</html>
