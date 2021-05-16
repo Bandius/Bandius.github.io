@@ -83,3 +83,14 @@ function changeScreen(){
     }, 5000);
 }
 window.onload = changeScreen();
+
+// function showOnScreens(page, screen){
+//     if(MQTTclient.isConnected()){
+//         console.log("Showing content on displays");
+//         var message = new Paho.MQTT.Message(page)
+//         message.destinationName = `openlab/screen/${screen}/url`;
+//         MQTTclient.send(message);
+//     }else{
+//         console.log("Client not connected!!!");
+//     }
+// }

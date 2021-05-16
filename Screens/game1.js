@@ -1,4 +1,4 @@
-MQTTclient = new Paho.MQTT.Client("openlab.kpi.fei.tuke.sk", 80, "/mqtt", "map_simulator_" + new Date() + (Math.random() * 1000));
+MQTTclient = new Paho.MQTT.Client("openlab.kpi.fei.tuke.sk", 80, "/mqtt", "ivan_bandola_" + new Date() + (Math.random() * 1000));
 MQTTclient.onConnectionLost = onConnectionLost;
 MQTTclient.onMessageArrived = onMessage;
 MQTTclient.connect({onSuccess: onConnect});
@@ -9,7 +9,6 @@ const TOPIC_VOICE = 'experiments/voice/recognition/ib149cd';
 
 // topics for openlab:
 // const TOPIC_VOICE = 'openlab/voice/recognition';
-// const TOPIC_
 
 function onConnect(){
     console.log("connected to MQTT");
@@ -104,6 +103,7 @@ function changeScreen(){
         console.log(">> display:",correct_display+1);
         correctDisplay(correct_display);
         document.getElementById('text').innerHTML = "Teraz počúvaj!";
+
         playSound();
     }, 1000);
 }
@@ -113,7 +113,6 @@ function playSound(){
     var cat = new Audio("../assets/audio/cat.mp3");
     var dog = new Audio("../assets/audio/dog.mp3");
     var animal = Math.floor(Math.random() * 3);
-    showAnimalsOnScreens();
     setTimeout(function (){
         switch(animal){
             case 0:
@@ -130,14 +129,8 @@ function playSound(){
     }, 2000);
 }
 
-function showAnimalsOnScreens(){
-    // this function will render images on screens around main display (3x3)
-    // vertical displays (1-5) [ openlab/screen/(11-15)/url ]
-    // projectors (1,2) [ openlab/screen/(21,22)/url ]
-}
 
 function findAnimal(type){
-    const info2 = 'Nájdi toto zvieratko okolo seba.';
     document.getElementById('text').innerHTML = "Nájdi toto zvieratko okolo seba.";
     // show pictures of animals on screens
 }
@@ -160,3 +153,14 @@ function checkPosition(x, y){
         }
     }
 }
+
+// function showOnScreens(page, screen){
+//     if(MQTTclient.isConnected()){
+//         console.log("Showing content on displays");
+//         var message = new Paho.MQTT.Message(page)
+//         message.destinationName = `openlab/screen/${screen}/url`;
+//         MQTTclient.send(message);
+//     }else{
+//         console.log("Client not connected!!!");
+//     }
+// }

@@ -136,3 +136,14 @@ function results(){
         document.getElementById('text').innerHTML = "Teraz mi povedzte farby, ktoré ste videli."
     }, 1000);
 }
+
+// function showOnScreens(page, screen){
+//     if(MQTTclient.isConnected()){
+//         console.log("Showing content on displays");
+//         var message = new Paho.MQTT.Message(page)
+//         message.destinationName = `openlab/screen/${screen}/url`;
+//         MQTTclient.send(message);
+//     }else{
+//         console.log("Client not connected!!!");
+//     }
+// }
