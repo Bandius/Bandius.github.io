@@ -74,7 +74,8 @@ function nope(){
     nope.play();
 }
 
-// window.onload = changeScreen();
+window.onload = setBlankScreens();
+
 function timer(){
     if(!finished){
         console.log(delay);
@@ -104,7 +105,9 @@ function changeScreen(){
         // playSound();
         correct_display = Math.floor(Math.random() * 5);
         console.log(">> display:",correct_display+1);
-        document.getElementById('text').innerHTML = "Teraz počúvaj!";
+        const text_listen = 'Teraz počúvaj!';
+        // olaSay(text_listen);
+        document.getElementById('text').innerHTML = text_listen;
         document.getElementById('hraj').style.visibility = 'hidden';
 
         playSound();
@@ -132,10 +135,30 @@ function playSound(){
     }, 2000);
 }
 
+const cat_url = "https://raw.githubusercontent.com/Bandius/Bandius.github.io/main/assets/images/screen_cat.png"
+const cow_url = "https://raw.githubusercontent.com/Bandius/Bandius.github.io/main/assets/images/screen_cow.png"
+const dog_url = "https://raw.githubusercontent.com/Bandius/Bandius.github.io/main/assets/images/screen_dog.png"
+const rabbit_url = "https://raw.githubusercontent.com/Bandius/Bandius.github.io/main/assets/images/screen_rabbit.png"
+// sheep to be added
 
 function findAnimal(type){
-    document.getElementById('text').innerHTML = "Nájdi toto zvieratko okolo seba.";
-    // show pictures of animals on screens
+    const info2 = 'Nájdi toto zvieratko okolo seba.';
+    // olaSay(info2);
+    document.getElementById('text').innerHTML = info2;
+    switch(type){
+        case 0:
+            console.log("showing cow on display", correct_display+11);
+            // showOnScreens(cow_url, 11+correct_display)
+            break;
+        case 1:
+            console.log("showing cat on display", correct_display+11);
+            // showOnScreens(cat_url, 11+correct_display)
+            break;
+        case 2:
+            console.log("showing dog on display", correct_display+11);
+            // showOnScreens(dog_url, 11+correct_display)
+            break;
+    }
 }
 
 // returns current display based on position
@@ -164,5 +187,19 @@ function checkPosition(x, y){
 //         MQTTclient.send(message);
 //     }else{
 //         console.log("Client not connected!!!");
+//     }
+// }
+
+// function setBlankScreens(){
+//     console.log("Setting screens to blank");
+//     for (var i = 11; i <= 15; i++){
+//         showOnScreens("https://raw.githubusercontent.com/Bandius/Bandius.github.io/main/assets/images/vertical_blank.png", i);
+//     }
+// }
+
+// function revertScreens(){
+//     console.log("Setting screens back to showcase");
+//     for (var i = 11; i <= 15; i++){
+//         showOnScreens("http://ukazky.kpi.fei.tuke.sk:8080/liveit.html", i);
 //     }
 // }
