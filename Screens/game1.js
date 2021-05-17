@@ -3,6 +3,7 @@ MQTTclient.onConnectionLost = onConnectionLost;
 MQTTclient.onMessageArrived = onMessage;
 MQTTclient.connect({onSuccess: onConnect});
 
+var started = false;
 var finished = false;
 const TOPIC = 'experiments/mapPositions/ib149cd/0';
 const TOPIC_VOICE = 'experiments/voice/recognition/ib149cd';
@@ -14,14 +15,16 @@ function onConnect(){
     console.log("connected to MQTT");
     subscribe();
 }
-var ano = ["ano", "áno"]
+var start = ["chceme hrať", "chcem hrať"]
+
 function onMessage(message) {
     msg = JSON.parse(message.payloadString);
     // console.log(msg);
     if (message.destinationName == 'experiments/voice/recognition/ib149cd'){
         if(msg.status == "recognized"){
             console.log(msg.recognized);
-            if (ano.includes(msg.recognized)){
+            if (!started && start.includes(msg.recognized)){
+                started = true;
                 changeScreen();
             }
         }
@@ -101,8 +104,8 @@ function changeScreen(){
         // playSound();
         correct_display = Math.floor(Math.random() * 5);
         console.log(">> display:",correct_display+1);
-        correctDisplay(correct_display);
         document.getElementById('text').innerHTML = "Teraz počúvaj!";
+        document.getElementById('hraj').style.visibility = 'hidden';
 
         playSound();
     }, 1000);
@@ -146,7 +149,6 @@ function checkPosition(x, y){
                     delay = false;
                     clearInterval(repeater);
                     timer();
-                    
                 }
                 
             }
