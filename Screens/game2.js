@@ -7,15 +7,29 @@ MQTTclient.onMessageArrived = onMessage;
 MQTTclient.connect({onSuccess: onConnect});
 
 const TOPIC = 'experiments/mapPositions/ib149cd/0';
+const TOPIC_VOICE = 'experiments/voice/recognition/ib149cd';
+
 function onConnect(){
     console.log("connected to MQTT");
+    subscribe();
 }
 
 function onMessage(message) {
     msg = JSON.parse(message.payloadString);
-    position = msg.positions[0];
-    console.log(position);
-    detectLight(position[0], position[1]);
+    if (message.destinationName == 'experiments/voice/recognition/ib149cd'){
+        if(msg.status == "recognized"){
+            console.log(msg.recognized);
+            if (!started && start.includes(msg.recognized)){
+                started = true;
+                changeScreen();
+            }
+        }
+    }else{
+        position = msg.positions[0];
+        console.log(position);
+        detectLight(position[0], position[1]);
+    }
+    
 
 }
 
@@ -27,20 +41,15 @@ function onConnectionLost(responseObject) {
 
 function subscribe(){
     MQTTclient.subscribe(TOPIC);
+    MQTTclient.subscribe(TOPIC_VOICE);
+    console.log("Subscribed!");
 }
 
 function unsubscribe(){
     MQTTclient.unsubscribe(TOPIC);
+    MQTTclient.unsubscribe(TOPIC_VOICE);
 }
 
-
-var slider = document.getElementById("myRange");
-var output = document.getElementById("rangeOutput");
-output.innerHTML = slider.value;
-
-slider.oninput = function(){
-    output.innerHTML = this.value;
-}
 
 function generate(){
     for (var i = 0; i < slider.value; i++){

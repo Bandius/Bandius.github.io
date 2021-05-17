@@ -7,6 +7,9 @@ const TOPIC = 'experiments/voice/recognition/ib149cd';
 
 var chosenObject;
 
+var started = false;
+var start = ["chceme hrať", "chcem hrať"]
+
 function onConnect(){
     console.log("connected to MQTT");
     subscribe();
@@ -16,6 +19,10 @@ function onMessage(message) {
     msg = JSON.parse(message.payloadString);
     if(msg.status == "recognized"){
         console.log(msg.recognized);
+        if (!started && start.includes(msg.recognized)){
+            started = true;
+            changeScreen();
+        }
         var number = detectNumber(msg.recognized);
         validateNumber(number);
 
@@ -61,6 +68,8 @@ function validateNumber(num){
 }
 
 function changeScreen(){
+    const info1 = 'V tejto hre budete hľadať, koľko objektov sa nachádza na obrazovke. Ak budete pripravení povedzte Ole Chceme hrať';
+    // olaSay(info1);
     var object = Math.floor(Math.random() * 3);
     var printObject;
     switch(object){
@@ -78,8 +87,10 @@ function changeScreen(){
             break;
     }
     setTimeout(function (){
+        const text_hladaj = `Koľko ${printObject} je na obrázku?`;
         document.getElementById('animals').style.visibility = 'visible';
-        document.getElementById('text').innerHTML = `Koľko ${printObject} je na obrázku?`
+        document.getElementById('text').innerHTML = text_hladaj;
+        // olaSay(text_hladaj);
     }, 5000);
 }
 window.onload = changeScreen();

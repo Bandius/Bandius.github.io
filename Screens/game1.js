@@ -1,4 +1,4 @@
-MQTTclient = new Paho.MQTT.Client("openlab.kpi.fei.tuke.sk", 80, "/mqtt", "ivan_bandola_" + new Date() + (Math.random() * 1000));
+MQTTclient = new Paho.MQTT.Client("openlab.kpi.fei.tuke.sk", 80, "/mqtt", "map_simulator_" + new Date() + (Math.random() * 1000));
 MQTTclient.onConnectionLost = onConnectionLost;
 MQTTclient.onMessageArrived = onMessage;
 MQTTclient.connect({onSuccess: onConnect});
@@ -53,7 +53,7 @@ function subscribe(){
 
 function unsubscribe(){
     MQTTclient.unsubscribe(TOPIC);
-    MQTTclient.subscribe(TOPIC_VOICE);
+    MQTTclient.unsubscribe(TOPIC_VOICE);
 }
 //---------------------------------------------------------------------
 
@@ -99,7 +99,7 @@ function timer(){
 // }
 
 function changeScreen(){
-    // const info1 = 'V tejto hre budete počuť zvuky zvierat. Vašou úlohou bude nájsť na obrazovkách okolo seba to správne zvieratko.';
+    const info1 = 'V tejto hre budete počuť zvuky zvierat. Vašou úlohou bude nájsť na obrazovkách okolo seba to správne zvieratko. Ak budete pripravení povedzte Ole Chceme hrať';
     // olaSay(info1);
     setTimeout(function (){
         // playSound();

@@ -14,11 +14,6 @@ var detected = [];
 const correct = ["áno", "to bola ona", "pekne", "super"];
 const incorrect = ["táto farba tam nebola", "ajaj, skús to ešte raz", "nie nie, toto nie je tá farba"];
 
-
-var info1 = 'V tejto hre si budete musieť zapamätať farby, ktoré sa vám ukážu.';
-var info2 = 'Ste pripravení?';
-var info3 = 'Zapamätajte si tieto farby.';
-
 function onConnect(){
     console.log("connected to MQTT");
     subscribe();
@@ -54,10 +49,12 @@ function unsubscribe(){
 // }
 
 function changeScreen(){
+    const info1 = 'V tejto hre si budete musieť zapamätať farby, ktoré sa vám ukážu. Ak budete pripravení povedzte Ole Chceme hrať';
     // olaSay(info1);
     setTimeout(function (){
+        const info2 = 'Zapamätajte si tieto farby.';
         document.getElementById('text').innerHTML = `Zapamätajte si tieto farby.`
-        // olaSay(info3);
+        // olaSay(info2);
         changeLights();
     }, 2000);
 }
@@ -133,7 +130,9 @@ function changeLights(){
 function results(){
     setTimeout(function (){
         document.getElementById('color').style.backgroundColor = "#7a7a7a";
+        const info3 = "Teraz mi povedzte farby, ktoré ste videli.";
         document.getElementById('text').innerHTML = "Teraz mi povedzte farby, ktoré ste videli."
+        // olaSay(info3)
     }, 1000);
 }
 

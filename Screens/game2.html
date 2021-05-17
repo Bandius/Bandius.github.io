@@ -8,14 +8,15 @@
 </head>
 <body>
     <div class="center">
-        <h1>Nájdi v priestore správnu farbu</h1>
+        <h1 class="head">Nájdi v priestore správnu farbu</h1>
     </div>
     <div class="slidercontainer">
-        <p class="popis" id="text">Počet hráčov: <span id="rangeOutput"></span></p>
-        <input type="range" min="1" max="10" value="1" class="slider" id="myRange">
+        <p class="popis" id="text">Koľko hráčov?</p>
+        <br>
+        <p class="popis" id="hraj" style="visibility: hidden;">Ak budete pripravení povedzte Ole: <br> "Chceme hrať"</p>
     </div>
-    <button onclick="changeScreen()">Sub</button>
-    <button onclick="unsubscribe()">Unsub</button>
+    <!-- <button onclick="changeScreen()">Sub</button>
+    <button onclick="unsubscribe()">Unsub</button> -->
 
     <script src="./game2.js"></script>
 </body>
