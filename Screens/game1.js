@@ -1,16 +1,18 @@
-MQTTclient = new Paho.MQTT.Client("openlab.kpi.fei.tuke.sk", 80, "/mqtt", "map_simulator_" + new Date() + (Math.random() * 1000));
+MQTTclient = new Paho.MQTT.Client("openlab.kpi.fei.tuke.sk", 80, "/mqtt", "ib149cd_testing_" + new Date() + (Math.random() * 1000));
 MQTTclient.onConnectionLost = onConnectionLost;
 MQTTclient.onMessageArrived = onMessage;
 MQTTclient.connect({onSuccess: onConnect});
 
 var started = false;
 var finished = false;
+var scan = false;
 const TOPIC = 'experiments/mapPositions/ib149cd/0';
 const TOPIC_VOICE = 'experiments/voice/recognition/ib149cd';
 
 // topics for openlab:
+// const TOPIC_POS_9 = 'openlab/mapPositions/9';
+// const TOPIC_POS_11= 'openlab/mapPositions/11';
 // const TOPIC_VOICE = 'openlab/voice/recognition';
-// openlab/mapPositions/9 a openlab/mapPositions/11
 
 function onConnect(){
     console.log("connected to MQTT");
@@ -30,31 +32,37 @@ function onMessage(message) {
             }
         }
     }else{
-        position = msg.positions[0];
-        console.log(position);
-        if(!finished){
-            checkPosition(position[0], position[1]);
+        if (scan){
+            position = msg.positions[0];
+            //console.log(position);
+            if(!finished){
+                checkPosition(position[0], position[1]);
+            }
         }
-    }
-    
-    
+        
+    }    
 }
 
 function onConnectionLost(responseObject) {
     if (responseObject.errorCode !== 0) {
         console.log("onConnectionLost:" + responseObject.errorMessage);
     }
+    MQTTclient.connect({onSuccess: onConnect});
 }
 
 function subscribe(){
+    // MQTTclient.subscribe(TOPIC_POS_9);
+    // MQTTclient.subscribe(TOPIC_POS_11);
     MQTTclient.subscribe(TOPIC);
     MQTTclient.subscribe(TOPIC_VOICE);
     console.log("Subscribed!");
 }
 
 function unsubscribe(){
+    // MQTTclient.unsubscribe(TOPIC_POS_9);
     MQTTclient.unsubscribe(TOPIC);
     MQTTclient.unsubscribe(TOPIC_VOICE);
+    // MQTTclient.unsubscribe(TOPIC_POS_11);
 }
 //---------------------------------------------------------------------
 
@@ -62,33 +70,43 @@ const displays = [[735, 770],[680, 715],[625, 660],[570, 605],[510, 550]];
 let correct_display = 0;
 let detected_display;
 let delay = false;
-var repeater;
+var repeater = 0;
 
 function gameCompleted(){
     finished = true;
-    // var win = new Audio("../assets/audio/win.mp3");
-    // win.play();
+    unsubscribe();
+    console.log("User found correct display");
+    var win = new Audio("../assets/audio/win.mp3");
+    win.play();
 }
 
 function nope(){
-    // var nope = new Audio("../assets/audio/nope.mp3");
-    // nope.play();
+    var nope = new Audio("../assets/audio/nope.mp3");
+    nope.play();
 }
 
-window.onload = setBlankScreens();
+// window.onload = setBlankScreens();
+
+var scanning = true;
+var cycles;
 
 function timer(){
-    if(!finished){
-        console.log(delay);
+    if(!finished && scanning){
         if ((detected_display == correct_display) && delay){
             clearInterval(repeater);
             gameCompleted();
         }
-        console.log("tick");
         if (detected_display == correct_display){
             delay = true;
         }
-        repeater = setTimeout(timer, 3000);
+        if (!delay && cycles == 1){
+            // clearInterval(repeater);
+            scanning = false;
+            cycles = 0;
+            nope();
+        }
+        cycles += 1;
+        repeater = setTimeout(timer, 5000);
     }
 }
 
@@ -106,13 +124,13 @@ function changeScreen(){
     setTimeout(function (){
         // playSound();
         correct_display = Math.floor(Math.random() * 5);
-        console.log(">> display:",correct_display+1);
+        // console.log(">> display:",correct_display+1);
         const text_listen = 'Teraz počúvaj!';
         // olaSay(text_listen);
-        showOnScreens("https://raw.githubusercontent.com/Bandius/Bandius.github.io/main/assets/testing_screens/Game1/listen.png", 21);
+        // showOnScreens("https://raw.githubusercontent.com/Bandius/Bandius.github.io/main/assets/testing_screens/Game1/listen.png", 21);
         document.getElementById('text').innerHTML = text_listen;
         document.getElementById('hraj').style.visibility = 'hidden';
-
+        scan = true;
         playSound();
     }, 1000);
 }
@@ -146,7 +164,7 @@ const rabbit_url = "https://raw.githubusercontent.com/Bandius/Bandius.github.io/
 
 function findAnimal(type){
     const info2 = 'Nájdi toto zvieratko okolo seba.';
-    showOnScreens("https://raw.githubusercontent.com/Bandius/Bandius.github.io/main/assets/testing_screens/Game1/find.png", 21);
+    // showOnScreens("https://raw.githubusercontent.com/Bandius/Bandius.github.io/main/assets/testing_screens/Game1/find.png", 21);
     // olaSay(info2);
     document.getElementById('text').innerHTML = info2;
     switch(type){
@@ -165,19 +183,27 @@ function findAnimal(type){
     }
 }
 
+var detecting = false;
+
 // returns current display based on position
 function checkPosition(x, y){
     if (y >= 440 && y <= 470){
         for (let i = 0; i < 5; i++){
             if(x >= displays[i][0] && x <= displays[i][1]){
                 if (i != detected_display){
-                    console.log("Display", i+1);
-                    detected_display = i
-                    delay = false;
+                    detecting = false;
+                    // console.log("User moved to another display");
+                    cycles = 0;
                     clearInterval(repeater);
+                    delay = false;
+                }
+                if (!detecting){
+                    // console.log("User at display number: ", i+1);
+                    detected_display = i;
+                    detecting = true;
+                    scanning = true;
                     timer();
                 }
-                
             }
         }
     }
@@ -208,6 +234,6 @@ function checkPosition(x, y){
 // function revertScreens(){
 //     console.log("Setting screens back to showcase");
 //     for (var i = 11; i <= 15; i++){
-//         showOnScreens("http://ukazky.kpi.fei.tuke.sk:8080/liveit.html", i);
+//         showOnScreens("  ", i);
 //     }
 // }
