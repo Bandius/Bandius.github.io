@@ -65,13 +65,13 @@ var repeater;
 
 function gameCompleted(){
     finished = true;
-    var win = new Audio("../assets/audio/win.mp3");
-    win.play();
+    // var win = new Audio("../assets/audio/win.mp3");
+    // win.play();
 }
 
 function nope(){
-    var nope = new Audio("../assets/audio/nope.mp3");
-    nope.play();
+    // var nope = new Audio("../assets/audio/nope.mp3");
+    // nope.play();
 }
 
 window.onload = setBlankScreens();
@@ -99,7 +99,7 @@ function timer(){
 // }
 
 function changeScreen(){
-    const info1 = 'V tejto hre budete počuť zvuky zvierat. Vašou úlohou bude nájsť na obrazovkách okolo seba to správne zvieratko. Ak budete pripravení povedzte Ole Chceme hrať';
+    const info1 = 'V tejto hre budete počuť zvuky zvierat. Vašou úlohou bude nájsť na obrazovkách okolo seba to správne zvieratko. Ak budete pripravení povedzte mi, Chceme hrať';
     // olaSay(info1);
     setTimeout(function (){
         // playSound();
