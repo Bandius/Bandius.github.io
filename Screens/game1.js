@@ -10,6 +10,7 @@ const TOPIC_VOICE = 'experiments/voice/recognition/ib149cd';
 
 // topics for openlab:
 // const TOPIC_VOICE = 'openlab/voice/recognition';
+// openlab/mapPositions/9 a openlab/mapPositions/11
 
 function onConnect(){
     console.log("connected to MQTT");
@@ -100,6 +101,7 @@ function timer(){
 
 function changeScreen(){
     const info1 = 'V tejto hre budete počuť zvuky zvierat. Vašou úlohou bude nájsť na obrazovkách okolo seba to správne zvieratko. Ak budete pripravení povedzte mi, Chceme hrať';
+    // olaSay("info")
     // olaSay(info1);
     setTimeout(function (){
         // playSound();
@@ -107,6 +109,7 @@ function changeScreen(){
         console.log(">> display:",correct_display+1);
         const text_listen = 'Teraz počúvaj!';
         // olaSay(text_listen);
+        showOnScreens("https://raw.githubusercontent.com/Bandius/Bandius.github.io/main/assets/testing_screens/Game1/listen.png", 21);
         document.getElementById('text').innerHTML = text_listen;
         document.getElementById('hraj').style.visibility = 'hidden';
 
@@ -120,17 +123,17 @@ function playSound(){
     var dog = new Audio("../assets/audio/dog.mp3");
     var animal = Math.floor(Math.random() * 3);
     setTimeout(function (){
-        switch(animal){
-            case 0:
-                var play = cow.play();
-                break;
-            case 1:
-                var play = cat.play();
-                break;
-            case 2:
-                var play = dog.play();
-                break;
-        }
+        // switch(animal){
+        //     case 0:
+        //         var play = cow.play();
+        //         break;
+        //     case 1:
+        //         var play = cat.play();
+        //         break;
+        //     case 2:
+        //         var play = dog.play();
+        //         break;
+        // }
         findAnimal(animal)
     }, 2000);
 }
@@ -143,6 +146,7 @@ const rabbit_url = "https://raw.githubusercontent.com/Bandius/Bandius.github.io/
 
 function findAnimal(type){
     const info2 = 'Nájdi toto zvieratko okolo seba.';
+    showOnScreens("https://raw.githubusercontent.com/Bandius/Bandius.github.io/main/assets/testing_screens/Game1/find.png", 21);
     // olaSay(info2);
     document.getElementById('text').innerHTML = info2;
     switch(type){
@@ -192,9 +196,13 @@ function checkPosition(x, y){
 
 // function setBlankScreens(){
 //     console.log("Setting screens to blank");
+//     // vertical screens
 //     for (var i = 11; i <= 15; i++){
 //         showOnScreens("https://raw.githubusercontent.com/Bandius/Bandius.github.io/main/assets/images/vertical_blank.png", i);
 //     }
+//     // projectors
+//     showOnScreens("https://raw.githubusercontent.com/Bandius/Bandius.github.io/main/assets/testing_screens/Game1/intro.png", 21);
+//     showOnScreens("https://raw.githubusercontent.com/Bandius/Bandius.github.io/main/assets/images/background.png", 22);
 // }
 
 // function revertScreens(){
