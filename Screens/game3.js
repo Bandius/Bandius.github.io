@@ -1,9 +1,14 @@
-MQTTclient = new Paho.MQTT.Client("openlab.kpi.fei.tuke.sk", 80, "/mqtt", "voice_simulator_" + new Date() + (Math.random() * 1000));
+MQTTclient = new Paho.MQTT.Client("openlab.kpi.fei.tuke.sk", 80, "/mqtt", "ib149cd_testing_" + new Date() + (Math.random() * 1000));
 MQTTclient.onConnectionLost = onConnectionLost;
 MQTTclient.onMessageArrived = onMessage;
 MQTTclient.connect({onSuccess: onConnect});
 
 const TOPIC = 'experiments/voice/recognition/ib149cd';
+
+// topics for openlab:
+// const TOPIC_POS_9 = 'openlab/mapPositions/9';
+// const TOPIC_POS_11= 'openlab/mapPositions/11';
+// const TOPIC_VOICE = 'openlab/voice/recognition';
 
 var chosenObject;
 

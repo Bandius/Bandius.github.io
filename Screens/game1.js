@@ -209,6 +209,18 @@ function checkPosition(x, y){
     }
 }
 
+
+// async function flash(){
+//     // var response = await fetch("../assets/lights/lights_all_green.json")
+//     var response = await fetch("../assets/lights/test.json")
+//     var lights = await response.json()
+//     console.log(lights);
+    
+//     var message = new Paho.MQTT.Message(JSON.stringify(lights));
+//         message.destinationName = "openlab/lights";
+//         MQTTclient.send(message);
+// }
+
 // function showOnScreens(page, screen){
 //     if(MQTTclient.isConnected()){
 //         console.log("Showing content on displays");
