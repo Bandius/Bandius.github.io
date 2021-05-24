@@ -165,7 +165,6 @@ function timer() {
 function changeScreen() {
   const info1 =
     "V tejto hre budete počuť zvuky zvierat. Vašou úlohou bude nájsť na obrazovkách okolo seba to správne zvieratko. Ak budete pripravení povedzte mi, Chceme hrať";
-  // olaSay("info")
   // olaSay(info1);
   setTimeout(function () {
     correct_display = Math.floor(Math.random() * 5);
@@ -265,7 +264,7 @@ function checkPosition(x, y) {
     }
   }
 }
-
+//------------------------- ONLY FOR TESTING ------------------------------------------
 // async function flash(){
 //     // var response = await fetch("../assets/lights/lights_all_green.json")
 //     var response = await fetch("../assets/lights/test.json")
@@ -276,6 +275,7 @@ function checkPosition(x, y) {
 //         message.destinationName = "openlab/lights";
 //         MQTTclient.send(message);
 // }
+//-------------------------------------------------------------------------------------
 
 // function showOnScreens(page, screen){
 //     if(MQTTclient.isConnected()){
