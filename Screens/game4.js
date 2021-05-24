@@ -6,8 +6,6 @@ MQTTclient.connect({onSuccess: onConnect});
 const TOPIC = 'experiments/voice/recognition/ib149cd';
 
 // topics for openlab:
-// const TOPIC_POS_9 = 'openlab/mapPositions/9';
-// const TOPIC_POS_11= 'openlab/mapPositions/11';
 // const TOPIC_VOICE = 'openlab/voice/recognition';
 
 var colors = [];

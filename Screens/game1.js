@@ -189,14 +189,15 @@ function playSound() {
 }
 
 const cat_url =
-  "https://raw.githubusercontent.com/Bandius/Bandius.github.io/main/assets/images/screen_cat.png";
+  "https://cdn.glitch.com/5d5672be-1399-4c02-8b58-9265fd697244%2Fscreen_cat.png?v=1621861284175";
 const cow_url =
-  "https://raw.githubusercontent.com/Bandius/Bandius.github.io/main/assets/images/screen_cow.png";
+  "https://cdn.glitch.com/5d5672be-1399-4c02-8b58-9265fd697244%2Fscreen_cow.png?v=1621861286371";
 const dog_url =
-  "https://raw.githubusercontent.com/Bandius/Bandius.github.io/main/assets/images/screen_dog.png";
+  "https://cdn.glitch.com/5d5672be-1399-4c02-8b58-9265fd697244%2Fscreen_dog.png?v=1621861288817";
 const rabbit_url =
-  "https://raw.githubusercontent.com/Bandius/Bandius.github.io/main/assets/images/screen_rabbit.png";
-// sheep to be added
+  "https://cdn.glitch.com/5d5672be-1399-4c02-8b58-9265fd697244%2Fscreen_rabbit.png?v=1621861290820";
+const sheep_url =
+  "https://cdn.glitch.com/5d5672be-1399-4c02-8b58-9265fd697244%2Fscreen_sheep.png?v=1621861389005";
 
 function findAnimal(type) {
   const info2 = "Nájdi toto zvieratko okolo seba.";
@@ -207,14 +208,34 @@ function findAnimal(type) {
     case 0:
       console.log("showing cow on display", correct_display + 11);
       // showOnScreens(cow_url, 11+correct_display)
+      for (var i = 11; i <= 15; i++){
+        if(i === 11+correct_display){
+          i++;
+        }
+        // showOnScreens(sheep_url, i);
+      }
       break;
     case 1:
       console.log("showing cat on display", correct_display + 11);
       // showOnScreens(cat_url, 11+correct_display)
+      for (var i = 11; i <= 15; i++){
+        if(i === 11+correct_display){
+          i++;
+        }
+        console.log(i);
+        // showOnScreens(sheep_url, i);
+      }
       break;
     case 2:
       console.log("showing dog on display", correct_display + 11);
       // showOnScreens(dog_url, 11+correct_display)
+      for (var i = 11; i <= 15; i++){
+        if(i === 11+correct_display){
+          i++;
+        }
+        console.log(i);
+        // showOnScreens(sheep_url, i);
+      }
       break;
   }
 }
@@ -269,18 +290,17 @@ function checkPosition(x, y) {
 
 // function setBlankScreens(){
 //     console.log("Setting screens to blank");
+//     // main screen
+//     showOnScreens("https://cdn.glitch.com/5d5672be-1399-4c02-8b58-9265fd697244%2Fbackground.png?v=1621864375592",0);
 //     // vertical screens
 //     for (var i = 11; i <= 15; i++){
-//         showOnScreens("https://raw.githubusercontent.com/Bandius/Bandius.github.io/main/assets/images/vertical_blank.png", i);
+//         showOnScreens("https://cdn.glitch.com/5d5672be-1399-4c02-8b58-9265fd697244%2Fvertical_blank.png?v=1621861399073", i);
 //     }
-//     // projectors
-//     showOnScreens("https://raw.githubusercontent.com/Bandius/Bandius.github.io/main/assets/testing_screens/Game1/intro.png", 21);
-//     showOnScreens("https://raw.githubusercontent.com/Bandius/Bandius.github.io/main/assets/images/background.png", 22);
 // }
 
 // function revertScreens(){
 //     console.log("Setting screens back to showcase");
 //     for (var i = 11; i <= 15; i++){
-//         showOnScreens("  ", i);
+//         showOnScreens("", i);
 //     }
 // }
