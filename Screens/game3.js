@@ -13,7 +13,7 @@ const TOPIC = 'experiments/voice/recognition/ib149cd';
 var chosenObject;
 
 var started = false;
-var start = ["chceme hrať", "chcem hrať"]
+var start = ["chceme hrať", "chcem hrať", "Chceme hrať", "Chcem hrať"];
 
 function onConnect(){
     console.log("connected to MQTT");
