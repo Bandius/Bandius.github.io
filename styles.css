@@ -14,7 +14,7 @@ h1 {
     font-weight: bold;
 }
 body {
-    background-image: url("https://git.kpi.fei.tuke.sk/ivan.bandola/openlab-assets/-/raw/master/screens/background.png");
+    background-image: url("./assets/images/background.png");
     background-size: inherit;
     width: 100%;
     height: 100%;
@@ -57,47 +57,6 @@ body {
     text-align: center;
     font-family: "Comic Sans MS", "Comic Sans", cursive;
 }
-
-.slidecontainer {
-    width: 50%; /* Width of the outside container */
-}
-
-/* The slider itself */
-.slider {
-    margin-left: 25%;
-    -webkit-appearance: none;  /* Override default CSS styles */
-    appearance: none;
-    width: 50%; /* Full-width */
-    height: 25px; /* Specified height */
-    background: #d3d3d3; /* Grey background */
-    outline: none; /* Remove outline */
-    opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
-    -webkit-transition: .2s; /* 0.2 seconds transition on hover */
-    transition: opacity .2s;
-}
-
-/* Mouse-over effects */
-.slider:hover {
-    opacity: 1; /* Fully shown on mouse-over */
-}
-
-/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
-.slider::-webkit-slider-thumb {
-    -webkit-appearance: none; /* Override default look */
-    appearance: none;
-    width: 25px; /* Set a specific slider handle width */
-    height: 25px; /* Slider handle height */
-    background: #4CAF50; /* Green background */
-    cursor: pointer; /* Cursor on hover */
-}
-
-.slider::-moz-range-thumb {
-    width: 25px; /* Set a specific slider handle width */
-    height: 25px; /* Slider handle height */
-    background: #4CAF50; /* Green background */
-    cursor: pointer; /* Cursor on hover */
-}
-
 .color {
     width: 400px;
     height: 400px;
@@ -108,8 +67,13 @@ body {
     width: 1025px;
     height: 650px;
 }
-/*.l1{*/
-/*    width: 100px;*/
-/*    height: 100px;*/
-/*    background-color: #4CAF50;*/
-/*}*/
+
+.intro {
+    background-image: url("./assets/images/intro.png");
+}
+
+.intro_header {
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
+    margin-top: 200px;
+    font-size: 50px;
+}

@@ -11,11 +11,14 @@ MQTTclient.connect({ onSuccess: onConnect });
 var started = false;
 var finished = false;
 var scan = false;
-const TEST_TOPIC = "experiments/mapPositions/ib149cd/0";
-const TEST_TOPIC_VOICE = "experiments/voice/recognition/ib149cd";
 var animal;
 
-// topics for openlab:
+// testing topics
+const TOPIC_POS_9 = "experiments/mapPositions/ib149cd/0";
+const TOPIC_VOICE = "experiments/voice/recognition/ib149cd";
+
+
+// topics for openlab
 // const TOPIC_POS_9 = 'openlab/mapPositions/9';
 // const TOPIC_POS_11= 'openlab/mapPositions/11';
 // const TOPIC_VOICE = 'openlab/voice/recognition';
@@ -56,8 +59,8 @@ function onConnectionLost(responseObject) {
 }
 
 function subscribe() {
-  MQTTclient.subscribe(TEST_TOPIC);
-  MQTTclient.subscribe(TEST_TOPIC_VOICE);
+  MQTTclient.subscribe(TOPIC_POS_9);
+  MQTTclient.subscribe(TOPIC_VOICE);
   // MQTTclient.subscribe(TOPIC_VOICE);
   // MQTTclient.subscribe(TOPIC_POS_9);
   // MQTTclient.subscribe(TOPIC_POS_11);
@@ -65,8 +68,8 @@ function subscribe() {
 }
 
 function unsubscribe() {
-  MQTTclient.unsubscribe(TEST_TOPIC);
-  MQTTclient.unsubscribe(TEST_TOPIC_VOICE);
+  MQTTclient.unsubscribe(TOPIC_POS_9);
+  MQTTclient.unsubscribe(TOPIC_VOICE);
   // MQTTclient.unsubscribe(TOPIC_VOICE);
   // MQTTclient.unsubscribe(TOPIC_POS_9);
   // MQTTclient.unsubscribe(TOPIC_POS_11);
