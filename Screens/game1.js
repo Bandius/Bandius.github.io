@@ -6,8 +6,9 @@ MQTTclient.connect({onSuccess: onConnect});
 var started = false;
 var finished = false;
 var scan = false;
-const TOPIC = 'experiments/mapPositions/ib149cd/0';
-const TOPIC_VOICE = 'experiments/voice/recognition/ib149cd';
+const TEST_TOPIC = 'experiments/mapPositions/ib149cd/0';
+const TEST_TOPIC_VOICE = 'experiments/voice/recognition/ib149cd';
+var animal;
 
 // topics for openlab:
 // const TOPIC_POS_9 = 'openlab/mapPositions/9';
@@ -51,17 +52,19 @@ function onConnectionLost(responseObject) {
 }
 
 function subscribe(){
+    MQTTclient.subscribe(TEST_TOPIC);
+    MQTTclient.subscribe(TEST_TOPIC_VOICE);
+    // MQTTclient.subscribe(TOPIC_VOICE);
     // MQTTclient.subscribe(TOPIC_POS_9);
     // MQTTclient.subscribe(TOPIC_POS_11);
-    MQTTclient.subscribe(TOPIC);
-    MQTTclient.subscribe(TOPIC_VOICE);
     console.log("Subscribed!");
 }
 
 function unsubscribe(){
+    MQTTclient.unsubscribe(TEST_TOPIC);
+    MQTTclient.unsubscribe(TEST_TOPIC_VOICE);
+    // MQTTclient.unsubscribe(TOPIC_VOICE);
     // MQTTclient.unsubscribe(TOPIC_POS_9);
-    MQTTclient.unsubscribe(TOPIC);
-    MQTTclient.unsubscribe(TOPIC_VOICE);
     // MQTTclient.unsubscribe(TOPIC_POS_11);
 }
 //---------------------------------------------------------------------
@@ -72,17 +75,43 @@ let detected_display;
 let delay = false;
 var repeater = 0;
 
+const correctMessages = ["Super, našiel si ho","Jupí, si jednotka"];
+const incorrectMessages = ["Toto nie je to správne zvieratko", "Zvieratko ktoré hľadáš robí tento zvuk"];
+
+function playAnimalSound(){
+    var cow = new Audio("../assets/audio/cow.mp3");
+    var cat = new Audio("../assets/audio/cat.mp3");
+    var dog = new Audio("../assets/audio/dog.mp3");
+    switch(animal){
+        case 0:
+            var play = cow.play();
+            // var content = JSON.stringify( {"play" : text});
+            break;
+        case 1:
+            var play = cat.play();
+            // var content = JSON.stringify( {"play" : text});
+            break;
+        case 2:
+            var play = dog.play();
+            // var content = JSON.stringify( {"play" : text});
+            break;
+    }
+        // var message = new Paho.MQTT.Message(content);
+        // message.destinationName = "openlab/audio";
+        // MQTTclient.send(message);
+}
+
 function gameCompleted(){
     finished = true;
     unsubscribe();
-    console.log("User found correct display");
-    var win = new Audio("../assets/audio/win.mp3");
-    win.play();
 }
 
-function nope(){
-    var nope = new Audio("../assets/audio/nope.mp3");
-    nope.play();
+function incorrectHint(){
+    var hint = Math.floor(Math.random() * incorrectMessages.length);
+    console.log(incorrectMessages[hint]);
+    if (hint == 1){
+        playAnimalSound();
+    }   
 }
 
 // window.onload = setBlankScreens();
@@ -90,10 +119,13 @@ function nope(){
 var scanning = true;
 var cycles;
 
+
 function timer(){
     if(!finished && scanning){
         if ((detected_display == correct_display) && delay){
             clearInterval(repeater);
+            var randomElement = correctMessages[Math.floor(Math.random() * correctMessages.length)];
+            console.log(randomElement);
             gameCompleted();
         }
         if (detected_display == correct_display){
@@ -103,7 +135,7 @@ function timer(){
             // clearInterval(repeater);
             scanning = false;
             cycles = 0;
-            nope();
+            incorrectHint();
         }
         cycles += 1;
         repeater = setTimeout(timer, 5000);
@@ -122,7 +154,6 @@ function changeScreen(){
     // olaSay("info")
     // olaSay(info1);
     setTimeout(function (){
-        // playSound();
         correct_display = Math.floor(Math.random() * 5);
         // console.log(">> display:",correct_display+1);
         const text_listen = 'Teraz počúvaj!';
@@ -136,23 +167,10 @@ function changeScreen(){
 }
 
 function playSound(){
-    var cow = new Audio("../assets/audio/cow.mp3");
-    var cat = new Audio("../assets/audio/cat.mp3");
-    var dog = new Audio("../assets/audio/dog.mp3");
-    var animal = Math.floor(Math.random() * 3);
+    animal = Math.floor(Math.random() * 3);
     setTimeout(function (){
-        // switch(animal){
-        //     case 0:
-        //         var play = cow.play();
-        //         break;
-        //     case 1:
-        //         var play = cat.play();
-        //         break;
-        //     case 2:
-        //         var play = dog.play();
-        //         break;
-        // }
-        findAnimal(animal)
+        playAnimalSound(animal);
+        findAnimal(animal);
     }, 2000);
 }
 
