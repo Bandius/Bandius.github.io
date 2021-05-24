@@ -102,7 +102,7 @@ function timer() {
       cycles = 0;
       if (detected_display <= 3) {
         sayInfo(detected_display + 1);
-        // playGame(detected_display + 1);
+        playGame(detected_display + 1);
       }
     }
     cycles += 1;
@@ -124,7 +124,6 @@ function checkPosition(x, y) {
       if (x >= displays[i][0] && x <= displays[i][1]) {
         if (i != detected_display) {
           detecting = false;
-          // console.log("User moved to another display");
           cycles = 0;
           clearInterval(repeater);
           delay = false;
@@ -214,9 +213,3 @@ function playGame(game){
 //         console.log("Client not connected!!!");
 //     }
 // }
-
-// setInterval(() => {
-//     cat = parseInt(document.getElementById("cat").style.marginLeft);
-//     document.getElementById("cat").style.marginLeft = `${cat-1}%`;
-  
-// }, 200);

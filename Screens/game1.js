@@ -8,26 +8,33 @@ MQTTclient.onConnectionLost = onConnectionLost;
 MQTTclient.onMessageArrived = onMessage;
 MQTTclient.connect({ onSuccess: onConnect });
 
-var started = false;
-var finished = false;
-var scan = false;
-var animal;
-
 // testing topics
 const TOPIC_POS_9 = "experiments/mapPositions/ib149cd/0";
 const TOPIC_VOICE = "experiments/voice/recognition/ib149cd";
-
 
 // topics for openlab
 // const TOPIC_POS_9 = 'openlab/mapPositions/9';
 // const TOPIC_POS_11= 'openlab/mapPositions/11';
 // const TOPIC_VOICE = 'openlab/voice/recognition';
 
+var started = false;
+var finished = false;
+var scan = false;
+var animal;
+
 function onConnect() {
   console.log("connected to MQTT");
-  subscribe();
+  intro();
 }
-var start = ["chceme hrať", "chcem hrať"];
+
+function intro(){
+  const info1 =
+    "V tejto hre budete počuť zvuky zvierat. Vašou úlohou bude nájsť na obrazovkách okolo seba to správne zvieratko. Ak budete pripravení povedzte mi, Chceme hrať";
+  // olaSay(info1);
+  listen();
+}
+
+var start = ["chceme hrať", "chcem hrať", "Chceme hrať", "Chcem hrať"];
 
 function onMessage(message) {
   msg = JSON.parse(message.payloadString);
@@ -38,15 +45,14 @@ function onMessage(message) {
       if (!started && start.includes(msg.recognized)) {
         started = true;
         changeScreen();
+        doNotListen();
       }
     }
   } else {
-    if (scan) {
-      position = msg.positions[0];
-      //console.log(position);
-      if (!finished) {
-        checkPosition(position[0], position[1]);
-      }
+    position = msg.positions[0];
+    //console.log(position);
+    if (!finished) {
+      checkPosition(position[0], position[1]);
     }
   }
 }
@@ -58,21 +64,33 @@ function onConnectionLost(responseObject) {
   MQTTclient.connect({ onSuccess: onConnect });
 }
 
-function subscribe() {
-  MQTTclient.subscribe(TOPIC_POS_9);
+// Subscribing and unsubscribing topics
+function listen() {
+  console.log("I am listening");
   MQTTclient.subscribe(TOPIC_VOICE);
-  // MQTTclient.subscribe(TOPIC_VOICE);
-  // MQTTclient.subscribe(TOPIC_POS_9);
+}
+
+function doNotListen() {
+  console.log("Paused listening");
+  MQTTclient.unsubscribe(TOPIC_VOICE);
+}
+
+function track(){
+  console.log("Started tracking");
+  MQTTclient.subscribe(TOPIC_POS_9);
   // MQTTclient.subscribe(TOPIC_POS_11);
-  console.log("Subscribed!");
+}
+
+function doNotTrack(){
+  console.log("Stopped tracking");
+  MQTTclient.unsubscribe(TOPIC_POS_9);
+  // MQTTclient.unsubscribe(TOPIC_POS_11);
 }
 
 function unsubscribe() {
   MQTTclient.unsubscribe(TOPIC_POS_9);
   MQTTclient.unsubscribe(TOPIC_VOICE);
-  // MQTTclient.unsubscribe(TOPIC_VOICE);
   // MQTTclient.unsubscribe(TOPIC_POS_9);
-  // MQTTclient.unsubscribe(TOPIC_POS_11);
 }
 //---------------------------------------------------------------------
 
@@ -166,18 +184,13 @@ function timer() {
 // }
 
 function changeScreen() {
-  const info1 =
-    "V tejto hre budete počuť zvuky zvierat. Vašou úlohou bude nájsť na obrazovkách okolo seba to správne zvieratko. Ak budete pripravení povedzte mi, Chceme hrať";
-  // olaSay(info1);
   setTimeout(function () {
     correct_display = Math.floor(Math.random() * 5);
     // console.log(">> display:",correct_display+1);
     const text_listen = "Teraz počúvaj!";
     // olaSay(text_listen);
-    // showOnScreens("https://raw.githubusercontent.com/Bandius/Bandius.github.io/main/assets/testing_screens/Game1/listen.png", 21);
     document.getElementById("text").innerHTML = text_listen;
     document.getElementById("hraj").style.visibility = "hidden";
-    scan = true;
     playSound();
   }, 1000);
 }
@@ -205,6 +218,7 @@ function findAnimal(type) {
   const info2 = "Nájdi toto zvieratko okolo seba.";
   // showOnScreens("https://raw.githubusercontent.com/Bandius/Bandius.github.io/main/assets/testing_screens/Game1/find.png", 21);
   // olaSay(info2);
+  track();
   document.getElementById("text").innerHTML = info2;
   switch (type) {
     case 0:

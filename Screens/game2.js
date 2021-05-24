@@ -8,20 +8,31 @@ MQTTclient.onConnectionLost = onConnectionLost;
 MQTTclient.onMessageArrived = onMessage;
 MQTTclient.connect({ onSuccess: onConnect });
 
-const TEST_TOPIC = "experiments/mapPositions/ib149cd/0";
-const TEST_TOPIC_VOICE = "experiments/voice/recognition/ib149cd";
+// testing topics
+const TOPIC_POS_9 = "experiments/mapPositions/ib149cd/0";
+const TOPIC_VOICE = "experiments/voice/recognition/ib149cd";
 
-var finished = false;
-
-// topics for openlab:
+// topics for openlab
 // const TOPIC_POS_9 = 'openlab/mapPositions/9';
 // const TOPIC_POS_11= 'openlab/mapPositions/11';
 // const TOPIC_VOICE = 'openlab/voice/recognition';
 
+var started = false;
+var finished = false;
+
 function onConnect() {
   console.log("connected to MQTT");
-  subscribe();
+  intro();
 }
+
+function intro(){
+  const info1 =
+    "V tejto hre vám poviem farbu. Vašou úlohou bude hľadať svetlo rovnakej farby a postaviť sa na neho. Ak budete pripravení povedzte mi, Chceme hrať";
+  // olaSay(info1);
+  listen();
+}
+
+var start = ["chceme hrať", "chcem hrať", "Chceme hrať", "Chcem hrať"];
 
 function onMessage(message) {
   msg = JSON.parse(message.payloadString);
@@ -30,7 +41,7 @@ function onMessage(message) {
       console.log(msg.recognized);
       if (!started && start.includes(msg.recognized)) {
         started = true;
-        // changeScreen();
+        changeScreen();
       }
     }
   } else {
@@ -49,20 +60,35 @@ function onConnectionLost(responseObject) {
   MQTTclient.connect({ onSuccess: onConnect });
 }
 
-function subscribe() {
-  MQTTclient.subscribe(TEST_TOPIC);
-  MQTTclient.subscribe(TEST_TOPIC_VOICE);
-  // MQTTclient.subscribe(TOPIC_POS_9);
+// Subscribing and unsubscribing topics
+function listen() {
+  console.log("I am listening");
+  MQTTclient.subscribe(TOPIC_VOICE);
+}
+
+function doNotListen() {
+  console.log("Paused listening");
+  MQTTclient.unsubscribe(TOPIC_VOICE);
+}
+
+function track(){
+  console.log("Started tracking");
+  MQTTclient.subscribe(TOPIC_POS_9);
   // MQTTclient.subscribe(TOPIC_POS_11);
-  console.log("Subscribed!");
+}
+
+function doNotTrack(){
+  console.log("Stopped tracking");
+  MQTTclient.unsubscribe(TOPIC_POS_9);
+  // MQTTclient.unsubscribe(TOPIC_POS_11);
 }
 
 function unsubscribe() {
-  MQTTclient.unsubscribe(TEST_TOPIC);
-  MQTTclient.unsubscribe(TEST_TOPIC_VOICE);
+  MQTTclient.unsubscribe(TOPIC_POS_9);
+  MQTTclient.unsubscribe(TOPIC_VOICE);
   // MQTTclient.unsubscribe(TOPIC_POS_9);
-  // MQTTclient.unsubscribe(TOPIC_POS_11);
 }
+//---------------------------------------------------------------------
 
 const correctMessages = ["Super, našiel si ho", "Jupí, si jednotka"];
 const incorrectMessages = [
@@ -227,15 +253,6 @@ function detectLight(x, y) {
   }
 }
 
-function changeScreen() {
-  setTimeout(function () {
-    start();
-    document.getElementById("text").innerHTML =
-      "V tejto hre vám poviem farbu. <br> Vašou úlohou bude hľadať svetlo rovnakej farby a postaviť sa na neho.";
-      // olaSay("V tejto hre vám poviem farbu. Vašou úlohou bude hľadať svetlo rovnakej farby a postaviť sa na neho.");
-  }, 1000);
-}
-
 function rgbToColor(rgbCode){
   switch(rgbCode){
     case "#0000FF":
@@ -247,8 +264,7 @@ function rgbToColor(rgbCode){
   }
 }
 
-// window.onload = changeScreen();
-function start() {
+function changeScreen() {
   var color = Math.floor(Math.random() * 3);
   switch (color) {
     case 0:
