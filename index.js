@@ -102,7 +102,7 @@ function timer() {
       cycles = 0;
       if (detected_display <= 3) {
         sayInfo(detected_display + 1);
-        playGame(detected_display + 1);
+        // playGame(detected_display + 1);
       }
     }
     cycles += 1;

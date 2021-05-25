@@ -21,7 +21,7 @@ var start = ["chceme hrať", "chcem hrať", "Chceme hrať", "Chcem hrať"];
 
 function onConnect() {
   console.log("connected to MQTT");
-  subscribe();
+  intro();
 }
 
 function onMessage(message) {
@@ -30,6 +30,7 @@ function onMessage(message) {
     console.log(msg.recognized);
     if (!started && start.includes(msg.recognized)) {
       started = true;
+      subscribe();
       changeScreen();
     }
     var number = detectNumber(msg.recognized);
@@ -80,17 +81,13 @@ function detectNumber(num) {
 function validateNumber(num) {
   const objects = [5, 8, 7];
   if (num == objects[chosenObject]) {
-    olaSay();
+    // olaSay("vyhral si!");
   } else {
-    var nope = new Audio("../assets/audio/nope.mp3");
-    nope.play();
+    // olaSay("prehral si");
   }
 }
 
 function changeScreen() {
-  const info1 =
-    "V tejto hre budete hľadať, koľko objektov sa nachádza na obrazovke. Ak budete pripravení povedzte Ole Chceme hrať";
-  // olaSay(info1);
   var object = Math.floor(Math.random() * 3);
   var printObject;
   switch (object) {
@@ -114,6 +111,12 @@ function changeScreen() {
     document.getElementById("text").innerHTML = text_hladaj;
     // olaSay(text_hladaj);
   }, 5000);
+}
+
+function intro(){
+  const info1 =
+  "V tejto hre budete hľadať, koľko objektov sa nachádza na obrazovke. Ak budete pripravení povedzte Ole Chceme hrať";
+  // olaSay(info1);
 }
 
 // function showOnScreens(page, screen){
