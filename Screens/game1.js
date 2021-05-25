@@ -8,14 +8,9 @@ MQTTclient.onConnectionLost = onConnectionLost;
 MQTTclient.onMessageArrived = onMessage;
 MQTTclient.connect({ onSuccess: onConnect });
 
-// testing topics
-const TOPIC_POS_9 = "experiments/mapPositions/ib149cd/0";
-const TOPIC_VOICE = "experiments/voice/recognition/ib149cd";
-
 // topics for openlab
-// const TOPIC_POS_9 = 'openlab/mapPositions/9';
-// const TOPIC_POS_11= 'openlab/mapPositions/11';
-// const TOPIC_VOICE = 'openlab/voice/recognition';
+const TOPIC_POS_9 = "openlab/mapPositions/9";
+const TOPIC_VOICE = "openlab/voice/recognition";
 
 var started = false;
 var finished = false;
@@ -27,10 +22,10 @@ function onConnect() {
   intro();
 }
 
-function intro(){
+function intro() {
   const info1 =
     "V tejto hre budete počuť zvuky zvierat. Vašou úlohou bude nájsť na obrazovkách okolo seba to správne zvieratko. Ak budete pripravení povedzte mi, Chceme hrať";
-  // olaSay(info1);
+  olaSay(info1);
   listen();
 }
 
@@ -38,10 +33,8 @@ var start = ["chceme hrať", "chcem hrať", "Chceme hrať", "Chcem hrať"];
 
 function onMessage(message) {
   msg = JSON.parse(message.payloadString);
-  // console.log(msg);
-  if (message.destinationName == "experiments/voice/recognition/ib149cd") {
+  if (message.destinationName == "openlab/voice/recognition") {
     if (msg.status == "recognized") {
-      console.log(msg.recognized);
       if (!started && start.includes(msg.recognized)) {
         started = true;
         changeScreen();
@@ -50,7 +43,6 @@ function onMessage(message) {
     }
   } else {
     position = msg.positions[0];
-    //console.log(position);
     if (!finished) {
       checkPosition(position[0], position[1]);
     }
@@ -66,23 +58,19 @@ function onConnectionLost(responseObject) {
 
 // Subscribing and unsubscribing topics
 function listen() {
-  console.log("I am listening");
   MQTTclient.subscribe(TOPIC_VOICE);
 }
 
 function doNotListen() {
-  console.log("Paused listening");
   MQTTclient.unsubscribe(TOPIC_VOICE);
 }
 
-function track(){
-  console.log("Started tracking");
+function track() {
   MQTTclient.subscribe(TOPIC_POS_9);
   // MQTTclient.subscribe(TOPIC_POS_11);
 }
 
-function doNotTrack(){
-  console.log("Stopped tracking");
+function doNotTrack() {
   MQTTclient.unsubscribe(TOPIC_POS_9);
   // MQTTclient.unsubscribe(TOPIC_POS_11);
 }
@@ -142,13 +130,12 @@ function gameCompleted() {
 
 function incorrectHint() {
   var hint = Math.floor(Math.random() * incorrectMessages.length);
-  console.log(incorrectMessages[hint]);
   if (hint == 1) {
     playAnimalSound();
   }
 }
 
-// window.onload = setBlankScreens();
+window.onload = setBlankScreens();
 
 var scanning = true;
 var cycles;
@@ -159,14 +146,12 @@ function timer() {
       clearInterval(repeater);
       var randomElement =
         correctMessages[Math.floor(Math.random() * correctMessages.length)];
-      console.log(randomElement);
       gameCompleted();
     }
     if (detected_display == correct_display) {
       delay = true;
     }
     if (!delay && cycles == 1) {
-      // clearInterval(repeater);
       scanning = false;
       cycles = 0;
       incorrectHint();
@@ -176,19 +161,18 @@ function timer() {
   }
 }
 
-// function olaSay(text){
-//     var content = JSON.stringify( {"say" : text});
-//     var message = new Paho.MQTT.Message(content);
-//     message.destinationName = "openlab/audio";
-//     MQTTclient.send(message);
-// }
+function olaSay(text) {
+  var content = JSON.stringify({ say: text });
+  var message = new Paho.MQTT.Message(content);
+  message.destinationName = "openlab/audio";
+  MQTTclient.send(message);
+}
 
 function changeScreen() {
   setTimeout(function () {
     correct_display = Math.floor(Math.random() * 5);
-    // console.log(">> display:",correct_display+1);
     const text_listen = "Teraz počúvaj!";
-    // olaSay(text_listen);
+    olaSay(text_listen);
     document.getElementById("text").innerHTML = text_listen;
     document.getElementById("hraj").style.visibility = "hidden";
     playSound();
@@ -198,59 +182,54 @@ function changeScreen() {
 function playSound() {
   animal = Math.floor(Math.random() * 3);
   setTimeout(function () {
-    playAnimalSound(animal);
+    // playAnimalSound(animal);
     findAnimal(animal);
   }, 2000);
 }
 
 const cat_url =
-  "https://cdn.glitch.com/5d5672be-1399-4c02-8b58-9265fd697244%2Fscreen_cat.png?v=1621861284175";
+  "http://cdn.glitch.com/5d5672be-1399-4c02-8b58-9265fd697244%2Fscreen_cat.png";
 const cow_url =
-  "https://cdn.glitch.com/5d5672be-1399-4c02-8b58-9265fd697244%2Fscreen_cow.png?v=1621861286371";
+  "http://cdn.glitch.com/5d5672be-1399-4c02-8b58-9265fd697244%2Fscreen_cow.png";
 const dog_url =
-  "https://cdn.glitch.com/5d5672be-1399-4c02-8b58-9265fd697244%2Fscreen_dog.png?v=1621861288817";
+  "http://cdn.glitch.com/5d5672be-1399-4c02-8b58-9265fd697244%2Fscreen_dog.png";
 const rabbit_url =
-  "https://cdn.glitch.com/5d5672be-1399-4c02-8b58-9265fd697244%2Fscreen_rabbit.png?v=1621861290820";
+  "http://cdn.glitch.com/5d5672be-1399-4c02-8b58-9265fd697244%2Fscreen_rabbit.png";
 const sheep_url =
-  "https://cdn.glitch.com/5d5672be-1399-4c02-8b58-9265fd697244%2Fscreen_sheep.png?v=1621861389005";
+  "http://cdn.glitch.com/5d5672be-1399-4c02-8b58-9265fd697244%2Fscreen_sheep.png";
 
 function findAnimal(type) {
   const info2 = "Nájdi toto zvieratko okolo seba.";
   // showOnScreens("https://raw.githubusercontent.com/Bandius/Bandius.github.io/main/assets/testing_screens/Game1/find.png", 21);
-  // olaSay(info2);
+  olaSay(info2);
   track();
   document.getElementById("text").innerHTML = info2;
   switch (type) {
     case 0:
-      console.log("showing cow on display", correct_display + 11);
-      // showOnScreens(cow_url, 11+correct_display)
-      for (var i = 11; i <= 15; i++){
-        if(i === 11+correct_display){
+      showOnScreens(cow_url, 11 + correct_display);
+      for (var i = 11; i <= 15; i++) {
+        if (i === 11 + correct_display) {
           i++;
         }
-        // showOnScreens(sheep_url, i);
+        showOnScreens(sheep_url, i);
       }
       break;
     case 1:
-      console.log("showing cat on display", correct_display + 11);
-      // showOnScreens(cat_url, 11+correct_display)
-      for (var i = 11; i <= 15; i++){
-        if(i === 11+correct_display){
+      showOnScreens(cat_url, 11 + correct_display);
+      for (var i = 11; i <= 15; i++) {
+        if (i === 11 + correct_display) {
           i++;
         }
-        console.log(i);
-        // showOnScreens(sheep_url, i);
+        showOnScreens(sheep_url, i);
       }
       break;
     case 2:
-      console.log("showing dog on display", correct_display + 11);
-      // showOnScreens(dog_url, 11+correct_display)
-      for (var i = 11; i <= 15; i++){
-        if(i === 11+correct_display){
+      showOnScreens(dog_url, 11 + correct_display);
+      for (var i = 11; i <= 15; i++) {
+        if (i === 11 + correct_display) {
           i++;
         }
-        console.log(i);
-        // showOnScreens(sheep_url, i);
+        showOnScreens(sheep_url, i);
       }
       break;
   }
@@ -265,13 +244,11 @@ function checkPosition(x, y) {
       if (x >= displays[i][0] && x <= displays[i][1]) {
         if (i != detected_display) {
           detecting = false;
-          // console.log("User moved to another display");
           cycles = 0;
           clearInterval(repeater);
           delay = false;
         }
         if (!detecting) {
-          // console.log("User at display number: ", i+1);
           detected_display = i;
           detecting = true;
           scanning = true;
@@ -281,43 +258,20 @@ function checkPosition(x, y) {
     }
   }
 }
-//------------------------- ONLY FOR TESTING ------------------------------------------
-// async function flash(){
-//     // var response = await fetch("../assets/lights/lights_all_green.json")
-//     var response = await fetch("../assets/lights/test.json")
-//     var lights = await response.json()
-//     console.log(lights);
 
-//     var message = new Paho.MQTT.Message(JSON.stringify(lights));
-//         message.destinationName = "openlab/lights";
-//         MQTTclient.send(message);
-// }
-//-------------------------------------------------------------------------------------
+function showOnScreens(page, screen) {
+  if (MQTTclient.isConnected()) {
+    var message = new Paho.MQTT.Message(page);
+    message.destinationName = `openlab/screen/${screen}/url`;
+    MQTTclient.send(message);
+  }
+}
 
-// function showOnScreens(page, screen){
-//     if(MQTTclient.isConnected()){
-//         console.log("Showing content on displays");
-//         var message = new Paho.MQTT.Message(page)
-//         message.destinationName = `openlab/screen/${screen}/url`;
-//         MQTTclient.send(message);
-//     }else{
-//         console.log("Client not connected!!!");
-//     }
-// }
-
-// function setBlankScreens(){
-//     console.log("Setting screens to blank");
-//     // main screen
-//     showOnScreens("https://cdn.glitch.com/5d5672be-1399-4c02-8b58-9265fd697244%2Fbackground.png?v=1621864375592",0);
-//     // vertical screens
-//     for (var i = 11; i <= 15; i++){
-//         showOnScreens("https://cdn.glitch.com/5d5672be-1399-4c02-8b58-9265fd697244%2Fvertical_blank.png?v=1621861399073", i);
-//     }
-// }
-
-// function revertScreens(){
-//     console.log("Setting screens back to showcase");
-//     for (var i = 11; i <= 15; i++){
-//         showOnScreens("", i);
-//     }
-// }
+function setBlankScreens() {
+  // main screen
+  showOnScreens("http://aquatic-striped-surprise.glitch.me/Screens/game1.html", 0);
+  // vertical screens
+  for (var i = 11; i <= 15; i++) {
+    showOnScreens("http://cdn.glitch.com/5d5672be-1399-4c02-8b58-9265fd697244%2Fvertical_blank.png", i);
+  }
+}

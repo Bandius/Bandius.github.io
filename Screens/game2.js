@@ -8,14 +8,9 @@ MQTTclient.onConnectionLost = onConnectionLost;
 MQTTclient.onMessageArrived = onMessage;
 MQTTclient.connect({ onSuccess: onConnect });
 
-// testing topics
-const TOPIC_POS_9 = "experiments/mapPositions/ib149cd/0";
-const TOPIC_VOICE = "experiments/voice/recognition/ib149cd";
-
 // topics for openlab
-// const TOPIC_POS_9 = 'openlab/mapPositions/9';
-// const TOPIC_POS_11= 'openlab/mapPositions/11';
-// const TOPIC_VOICE = 'openlab/voice/recognition';
+const TOPIC_POS_9 = 'openlab/mapPositions/9';
+const TOPIC_VOICE = 'openlab/voice/recognition';
 
 var started = false;
 var finished = false;
@@ -28,7 +23,7 @@ function onConnect() {
 function intro(){
   const info1 =
     "V tejto hre vám poviem farbu. Vašou úlohou bude hľadať svetlo rovnakej farby a postaviť sa na neho. Ak budete pripravení povedzte mi, Chceme hrať";
-  // olaSay(info1);
+  olaSay(info1);
   listen();
 }
 
@@ -36,7 +31,7 @@ var start = ["chceme hrať", "chcem hrať", "Chceme hrať", "Chcem hrať"];
 
 function onMessage(message) {
   msg = JSON.parse(message.payloadString);
-  if (message.destinationName == "experiments/voice/recognition/ib149cd") {
+  if (message.destinationName == "openlab/voice/recognition") {
     if (msg.status == "recognized") {
       console.log(msg.recognized);
       if (!started && start.includes(msg.recognized)) {
@@ -105,7 +100,6 @@ function gameCompleted() {
 var correct_lights = [];
 let detected_light;
 let delay = false;
-var correct_light = 0;
 var repeater = 0;
 var scanning = true;
 var cycles;
@@ -127,19 +121,18 @@ function timer() {
       var randomCorrect =
         correctMessages[Math.floor(Math.random() * correctMessages.length)];
       console.log(randomCorrect);
-      // olaSay(randomCorrect);
+      olaSay(randomCorrect);
     }
     if (compare_lights()) {
       delay = true;
     }
     if (!delay && cycles == 1) {
-      // clearInterval(repeater);
       scanning = false;
       cycles = 0;
       var randomIncorrect =
         incorrectMessages[Math.floor(Math.random() * incorrectMessages.length)];
       console.log(randomIncorrect);
-      // olaSay(randomIncorrect);
+      olaSay(randomIncorrect);
     }
     cycles += 1;
     repeater = setTimeout(timer, 5000);
@@ -152,7 +145,6 @@ function detectLight(x, y) {
   // top
   const startY_row1 = 300;
   const endY_row1 = 330;
-  // L = 62
   // middle
   const startY_row2 = 350;
   const endY_row2 = 380;
@@ -281,65 +273,64 @@ function changeScreen() {
       break;
   }
   setTimeout(function () {
-    // changeLights(color);
+    changeLights(color);
     document.getElementById("text").innerHTML = `Nájdite ${rgbToColor(color)} farbu:`;
-    // switch(color){
-    //   case "#0000FF":
-    //     olaSay("Nájdi modrú farbu");
-    //     break;
-    //   case "#FF0000":
-    //     olaSay("Nájdi červenú farbu");
-    //     break;
-    //   case "#FFFF00":
-    //     olaSay("Nájdi žltú farbu");
-    //     break;
-    // } 
+    switch(color){
+      case "#0000FF":
+        olaSay("Nájdi modrú farbu");
+        break;
+      case "#FF0000":
+        olaSay("Nájdi červenú farbu");
+        break;
+      case "#FFFF00":
+        olaSay("Nájdi žltú farbu");
+        break;
+    } 
 
     document.getElementById("hraj").style.visibility = "hidden";
-    // console.log(color);
     console.log(correct_lights);
-    // document.getElementById('color').style.backgroundColor = color;
+    document.getElementById('color').style.backgroundColor = color;
   }, 2000);
 }
 
-// const lights_blue = require('../assets/lights/lights_blue.json');
-// const lights_red = require('../assets/lights/lights_red.json');
-// const lights_yellow = require('../assets/lights/lights_yellow.json');
+const lights_blue = require('../assets/lights/lights_blue.json');
+const lights_red = require('../assets/lights/lights_red.json');
+const lights_yellow = require('../assets/lights/lights_yellow.json');
 
-// function changeLights(color) {
-//   if(mqttClient.isConnected()){
-//     var content;
-//     switch (color) {
-//       case "#0000FF":
-//         content = lights_blue;
-//         break;
-//       case "#FF0000":
-//         content = lights_red;
-//         break;
-//       case "#FFFF00":
-//         content = lights_yellow;
-//         break;
-//     }
-//     var message = new Paho.MQTT.Message(JSON.stringify(content));
-//     message.destinationName = "openlab/lights";
-//     mqttClient.send(message);
-//   } 
-// }
+function changeLights(color) {
+  if(mqttClient.isConnected()){
+    var content;
+    switch (color) {
+      case "#0000FF":
+        content = lights_blue;
+        break;
+      case "#FF0000":
+        content = lights_red;
+        break;
+      case "#FFFF00":
+        content = lights_yellow;
+        break;
+    }
+    var message = new Paho.MQTT.Message(JSON.stringify(content));
+    message.destinationName = "openlab/lights";
+    mqttClient.send(message);
+  } 
+}
 
-// function showOnScreens(page, screen){
-//     if(MQTTclient.isConnected()){
-//         console.log("Showing content on displays");
-//         var message = new Paho.MQTT.Message(page)
-//         message.destinationName = `openlab/screen/${screen}/url`;
-//         MQTTclient.send(message);
-//     }else{
-//         console.log("Client not connected!!!");
-//     }
-// }
+function showOnScreens(page, screen){
+    if(MQTTclient.isConnected()){
+        console.log("Showing content on displays");
+        var message = new Paho.MQTT.Message(page)
+        message.destinationName = `openlab/screen/${screen}/url`;
+        MQTTclient.send(message);
+    }else{
+        console.log("Client not connected!!!");
+    }
+}
 
-// function olaSay(text){
-//     var content = JSON.stringify( {"say" : text});
-//     var message = new Paho.MQTT.Message(content);
-//     message.destinationName = "openlab/audio";
-//     MQTTclient.send(message);
-// }
+function olaSay(text){
+    var content = JSON.stringify( {"say" : text});
+    var message = new Paho.MQTT.Message(content);
+    message.destinationName = "openlab/audio";
+    MQTTclient.send(message);
+}

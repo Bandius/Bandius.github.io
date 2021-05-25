@@ -8,11 +8,8 @@ MQTTclient.onConnectionLost = onConnectionLost;
 MQTTclient.onMessageArrived = onMessage;
 MQTTclient.connect({ onSuccess: onConnect });
 
-// testing topic
-const TOPIC_VOICE = "experiments/voice/recognition/ib149cd";
-
 // topic for openlab
-// const TOPIC_VOICE = 'openlab/voice/recognition';
+const TOPIC_VOICE = 'openlab/voice/recognition';
 
 var colors = [];
 var detected = [];
@@ -40,7 +37,6 @@ function onMessage(message) {
       started = true;
       changeScreen();
     }
-    console.log(msg.recognized);
     saveColor(msg.recognized);
   }
 }
@@ -60,12 +56,12 @@ function unsubscribe() {
   MQTTclient.unsubscribe(TOPIC_VOICE);
 }
 
-// function olaSay(text){
-//     var content = JSON.stringify( {"say" : text});
-//     var message = new Paho.MQTT.Message(content);
-//     message.destinationName = "openlab/audio";
-//     MQTTclient.send(message);
-// }
+function olaSay(text){
+    var content = JSON.stringify( {"say" : text});
+    var message = new Paho.MQTT.Message(content);
+    message.destinationName = "openlab/audio";
+    MQTTclient.send(message);
+}
 
 function changeScreen() {
   const info1 =
@@ -85,8 +81,8 @@ var colorsLeft = 4;
 function saveColor(color) {
   if (colors.includes(color) && !detected.includes(color)) {
     if (colorsLeft > 1) {
-      // var random_correct = Math.floor(Math.random() * correct.length);
-      // olaSay(correct[random_correct]);
+      var random_correct = Math.floor(Math.random() * correct.length);
+      olaSay(correct[random_correct]);
     }
     detected.push(color);
     colorsLeft--;
@@ -95,8 +91,8 @@ function saveColor(color) {
     // olaSay(incorrect[random_incorrect]);
   }
   if (colorsLeft == 0) {
-    // const winning_text = "Krásne, uhádli ste všetky farby. Ste veľmi šikovní";
-    // olaSay(winning_text);
+    const winning_text = "Krásne, uhádli ste všetky farby. Ste veľmi šikovní";
+    olaSay(winning_text);
   }
 }
 
@@ -128,7 +124,6 @@ function revealColors() {
           // lights="ff880000";
           break;
       }
-      console.log(color);
       colors.push(colorStr);
       document.getElementById("color").style.visibility = 'visible';
       document.getElementById("color").style.backgroundColor = color;

@@ -8,11 +8,8 @@ MQTTclient.onConnectionLost = onConnectionLost;
 MQTTclient.onMessageArrived = onMessage;
 MQTTclient.connect({ onSuccess: onConnect });
 
-// testing topic
-const TOPIC_VOICE = "experiments/voice/recognition/ib149cd";
-
 // topic for openlab
-// const TOPIC_VOICE = 'openlab/voice/recognition';
+const TOPIC_VOICE = 'openlab/voice/recognition';
 
 var chosenObject;
 
@@ -27,7 +24,6 @@ function onConnect() {
 function onMessage(message) {
   msg = JSON.parse(message.payloadString);
   if (msg.status == "recognized") {
-    console.log(msg.recognized);
     if (!started && start.includes(msg.recognized)) {
       started = true;
       subscribe();
@@ -81,9 +77,9 @@ function detectNumber(num) {
 function validateNumber(num) {
   const objects = [5, 8, 7];
   if (num == objects[chosenObject]) {
-    // olaSay("vyhral si!");
+    olaSay("vyhral si!");
   } else {
-    // olaSay("prehral si");
+    olaSay("prehral si");
   }
 }
 
@@ -117,22 +113,20 @@ function intro(){
   const info1 =
   "V tejto hre budete hľadať, koľko objektov sa nachádza na obrazovke. Ak budete pripravení povedzte Ole Chceme hrať";
   // olaSay(info1);
+  subscribe();
 }
 
-// function showOnScreens(page, screen){
-//     if(MQTTclient.isConnected()){
-//         console.log("Showing content on displays");
-//         var message = new Paho.MQTT.Message(page)
-//         message.destinationName = `openlab/screen/${screen}/url`;
-//         MQTTclient.send(message);
-//     }else{
-//         console.log("Client not connected!!!");
-//     }
-// }
+function showOnScreens(page, screen){
+    if(MQTTclient.isConnected()){
+        var message = new Paho.MQTT.Message(page)
+        message.destinationName = `openlab/screen/${screen}/url`;
+        MQTTclient.send(message);
+    }
+}
 
-// function olaSay(text){
-//     var content = JSON.stringify( {"say" : text});
-//     var message = new Paho.MQTT.Message(content);
-//     message.destinationName = "openlab/audio";
-//     MQTTclient.send(message);
-// }
+function olaSay(text){
+    var content = JSON.stringify( {"say" : text});
+    var message = new Paho.MQTT.Message(content);
+    message.destinationName = "openlab/audio";
+    MQTTclient.send(message);
+}
