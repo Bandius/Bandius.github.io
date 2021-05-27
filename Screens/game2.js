@@ -33,15 +33,14 @@ function onMessage(message) {
   msg = JSON.parse(message.payloadString);
   if (message.destinationName == "openlab/voice/recognition") {
     if (msg.status == "recognized") {
-      console.log(msg.recognized);
       if (!started && start.includes(msg.recognized)) {
         started = true;
         changeScreen();
+        doNotListen();
       }
     }
   } else {
     position = msg.positions[0];
-    // console.log(position);
     if (!finished){
       detectLight(position[0], position[1]);
     }
@@ -57,31 +56,20 @@ function onConnectionLost(responseObject) {
 
 // Subscribing and unsubscribing topics
 function listen() {
-  console.log("I am listening");
   MQTTclient.subscribe(TOPIC_VOICE);
 }
 
 function doNotListen() {
-  console.log("Paused listening");
   MQTTclient.unsubscribe(TOPIC_VOICE);
 }
 
 function track(){
-  console.log("Started tracking");
   MQTTclient.subscribe(TOPIC_POS_9);
-  // MQTTclient.subscribe(TOPIC_POS_11);
-}
-
-function doNotTrack(){
-  console.log("Stopped tracking");
-  MQTTclient.unsubscribe(TOPIC_POS_9);
-  // MQTTclient.unsubscribe(TOPIC_POS_11);
 }
 
 function unsubscribe() {
   MQTTclient.unsubscribe(TOPIC_POS_9);
   MQTTclient.unsubscribe(TOPIC_VOICE);
-  // MQTTclient.unsubscribe(TOPIC_POS_9);
 }
 //---------------------------------------------------------------------
 
@@ -93,7 +81,6 @@ const incorrectMessages = [
 
 function gameCompleted() {
   finished = true;
-  // console.log("WWCD");
   unsubscribe();
 }
 
@@ -120,7 +107,6 @@ function timer() {
       gameCompleted();
       var randomCorrect =
         correctMessages[Math.floor(Math.random() * correctMessages.length)];
-      console.log(randomCorrect);
       olaSay(randomCorrect);
     }
     if (compare_lights()) {
@@ -131,7 +117,6 @@ function timer() {
       cycles = 0;
       var randomIncorrect =
         incorrectMessages[Math.floor(Math.random() * incorrectMessages.length)];
-      console.log(randomIncorrect);
       olaSay(randomIncorrect);
     }
     cycles += 1;
@@ -196,7 +181,6 @@ function detectLight(x, y) {
           delay = false;
         }
         if (!detecting) {
-          console.log("User at light number: ", lights_1_values[i]);
           detected_light = lights_1_values[i];
           detecting = true;
           scanning = true;
@@ -215,7 +199,6 @@ function detectLight(x, y) {
           delay = false;
         }
         if (!detecting) {
-          console.log("User at light number: ", lights_2_values[i]);
           detected_light = lights_2_values[i];
           detecting = true;
           scanning = true;
@@ -234,7 +217,6 @@ function detectLight(x, y) {
           delay = false;
         }
         if (!detecting) {
-          console.log("User at light number: ", lights_3_values[i]);
           detected_light = lights_3_values[i];
           detecting = true;
           scanning = true;
@@ -288,8 +270,8 @@ function changeScreen() {
     } 
 
     document.getElementById("hraj").style.visibility = "hidden";
-    console.log(correct_lights);
     document.getElementById('color').style.backgroundColor = color;
+    track();
   }, 2000);
 }
 
@@ -319,12 +301,9 @@ function changeLights(color) {
 
 function showOnScreens(page, screen){
     if(MQTTclient.isConnected()){
-        console.log("Showing content on displays");
         var message = new Paho.MQTT.Message(page)
         message.destinationName = `openlab/screen/${screen}/url`;
         MQTTclient.send(message);
-    }else{
-        console.log("Client not connected!!!");
     }
 }
 

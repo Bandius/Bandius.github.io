@@ -78,41 +78,41 @@ function validateNumber(num) {
   const objects = [5, 8, 7];
   if (num == objects[chosenObject]) {
     olaSay("vyhral si!");
+    unsubscribe();
   } else {
-    olaSay("prehral si");
+    olaSay("skús to ešte raz");
   }
 }
 
 function changeScreen() {
   var object = Math.floor(Math.random() * 3);
-  var printObject;
+  var text_hladaj;
   switch (object) {
     case 0:
-      printObject = "autíčok";
+      text_hladaj = "Koľko autíčok je na obrázku?";
       chosenObject = 0;
       break;
     case 1:
-      printObject = "lietadiel";
+      text_hladaj = "Koľko lietadiel je na obrázku?";
       chosenObject = 1;
       break;
     case 2:
-      printObject = "kravičiek";
+      text_hladaj = "Koľko kravičiek je na obrázku?";
       chosenObject = 2;
       break;
   }
   setTimeout(function () {
     document.getElementById('hraj').style.visibility = 'hidden';
-    const text_hladaj = `Koľko ${printObject} je na obrázku?`;
     document.getElementById("animals").style.visibility = "visible";
     document.getElementById("text").innerHTML = text_hladaj;
-    // olaSay(text_hladaj);
+    olaSay(text_hladaj);
   }, 5000);
 }
 
 function intro(){
   const info1 =
   "V tejto hre budete hľadať, koľko objektov sa nachádza na obrazovke. Ak budete pripravení povedzte Ole Chceme hrať";
-  // olaSay(info1);
+  olaSay(info1);
   subscribe();
 }
 

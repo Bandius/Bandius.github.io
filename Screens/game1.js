@@ -67,18 +67,15 @@ function doNotListen() {
 
 function track() {
   MQTTclient.subscribe(TOPIC_POS_9);
-  // MQTTclient.subscribe(TOPIC_POS_11);
 }
 
 function doNotTrack() {
   MQTTclient.unsubscribe(TOPIC_POS_9);
-  // MQTTclient.unsubscribe(TOPIC_POS_11);
 }
 
 function unsubscribe() {
   MQTTclient.unsubscribe(TOPIC_POS_9);
   MQTTclient.unsubscribe(TOPIC_VOICE);
-  // MQTTclient.unsubscribe(TOPIC_POS_9);
 }
 //---------------------------------------------------------------------
 
@@ -101,26 +98,20 @@ const incorrectMessages = [
 ];
 
 function playAnimalSound() {
-  var cow = new Audio("../assets/audio/cow.mp3");
-  var cat = new Audio("../assets/audio/cat.mp3");
-  var dog = new Audio("../assets/audio/dog.mp3");
   switch (animal) {
     case 0:
-      var play = cow.play();
-      // var content = JSON.stringify( {"play" : text});
+      var content = JSON.stringify( {"play" : "http://cdn.glitch.com/f57fcd24-cfe9-48da-8e70-e5e2ce11831a%2Fcow.mp3"});
       break;
     case 1:
-      var play = cat.play();
-      // var content = JSON.stringify( {"play" : text});
+      var content = JSON.stringify( {"play" : "http://cdn.glitch.com/f57fcd24-cfe9-48da-8e70-e5e2ce11831a%2Fcat.mp3"});
       break;
     case 2:
-      var play = dog.play();
-      // var content = JSON.stringify( {"play" : text});
+      var content = JSON.stringify( {"play" : "http://cdn.glitch.com/f57fcd24-cfe9-48da-8e70-e5e2ce11831a%2Fdog.mp3"});
       break;
   }
-  // var message = new Paho.MQTT.Message(content);
-  // message.destinationName = "openlab/audio";
-  // MQTTclient.send(message);
+  var message = new Paho.MQTT.Message(content);
+  message.destinationName = "openlab/audio";
+  MQTTclient.send(message);
 }
 
 function gameCompleted() {
@@ -182,7 +173,7 @@ function changeScreen() {
 function playSound() {
   animal = Math.floor(Math.random() * 3);
   setTimeout(function () {
-    // playAnimalSound(animal);
+    playAnimalSound(animal);
     findAnimal(animal);
   }, 2000);
 }
